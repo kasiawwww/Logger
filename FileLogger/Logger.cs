@@ -28,13 +28,26 @@ namespace FileLogger
 
         public void Log(string text)
         {
+          
+            try
+            {
+                // File.AppendAllLines(Path.Combine(directory, fileName), new string[] { text });
+                CreateDirectory();
+                File.AppendAllText(Path.Combine(directory, fileName), $"{Environment.NewLine} Data: {DateTime.Now.ToShortDateString()} Informacja: {text}");
+            }
+            catch (DirectoryNotFoundException dnfe)
+            {
+                Log(text);
+            }
+
+        }
+
+        private static void CreateDirectory()
+        {
             if (!Directory.Exists(directory))
+            {
                 Directory.CreateDirectory(directory);
-
-            // File.AppendAllLines(Path.Combine(directory, fileName), new string[] { text });
-            text = $"{Environment.NewLine} Data: {DateTime.Now.ToShortDateString()} Informacja: {text}  {Environment.NewLine}";
-            File.AppendAllText(Path.Combine(directory, fileName), text);
-
+            }
         }
 
         private void setDirectory()
